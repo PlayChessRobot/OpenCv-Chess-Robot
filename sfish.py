@@ -1,7 +1,7 @@
 from stockfish import Stockfish
-
+import os
 # you should install the stockfish engine in your operating system globally or specify path to binary file in class constructor
-stockfish = Stockfish('/root/Downloads/Compressed/stockfish-10-linux/src/stockfish')
+stockfish = Stockfish(os.getcwd()+'/stockfish-10-linux/src/stockfish')
 
 # set position by FEN:
 stockfish.set_fen_position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 100")

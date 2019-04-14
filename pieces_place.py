@@ -1,5 +1,7 @@
 import random
 import time
+
+# import arduino_python
 import chess3
 import sfish
 import stockfish
@@ -25,14 +27,19 @@ def white_rook_detect(location_list, white_find_rook):
         if str.find(location_list[i], 'e1') != -1:
             white_find_rook = white_find_rook + 1
         if location_list[i] == 'e1f1' and white_find_rook == 1:
-            # print('e1' + 'f1' + 'h1' + 'e1')
-            print(location_list[i])
-            return location_list[i], white_find_rook
+            print('e1-' + '-f1_put-' + '-h1-' + '-e1_put-')
+            # print(location_list[i])
+            white_find_rook = 1
+            rook_control = 1
+            return white_find_rook, rook_control
         elif location_list[i] == 'e1c1' and white_find_rook == 1:
-            # print('e1' + 'c1' + 'a1' +'d1')
-            print('e1c1')
-            return location_list[i], white_find_rook
-    return 0, white_find_rook
+            print('e1-' + '-c1_put-' + '-a1-' + '-d1_put')
+            # print('e1c1')
+            white_find_rook = 1
+            rook_control = 1
+            return white_find_rook, rook_control
+    rook_control = 0
+    return white_find_rook, rook_control
 
 
 def black_rook_detect(location_list, black_find_rook):
@@ -40,14 +47,19 @@ def black_rook_detect(location_list, black_find_rook):
         if str.find(location_list[i], 'e8') != -1:
             black_find_rook = black_find_rook + 1
         if location_list[i] == 'e8f8' and black_find_rook == 1:
-            # print('e1' + 'f1' + 'h1' + 'e1')
-            print(location_list[i])
-            return location_list[i], black_find_rook
+            print('-e8-' + '-f8-' + '-put-' + '-h1-' + '-e1-' + '-put-')
+            # print(location_list[i])
+            black_find_rook = 1
+            rook_control = 1
+            return black_find_rook, rook_control
         elif location_list[i] == 'e8c8' and black_find_rook == 1:
-            # print('e1' + 'c1' + 'a1' +'d1')
-            print('e8c8')
-            return location_list[i], black_find_rook
-    return 0, black_find_rook
+            print('-e1-' + '-c1-' + 'put' + '-a1-' + '-d1-' + '-put-')
+            # print('e8c8')
+            black_find_rook = 1
+            rook_control = 1
+            return black_find_rook, rook_control
+    rook_control = 0
+    return black_find_rook, rook_control
 
 
 def control(listxy, place, pieces):
@@ -82,6 +94,8 @@ def control(listxy, place, pieces):
 
 
 def view():
+    # arduino_python.connection()
+
     coordinate, _ = chess3.points()
     _, listxy = chess3.points()
     diff = []
@@ -103,8 +117,9 @@ def view():
     robot_time = time.time()
     robot = 0
     rook = 0
-    # white_find_rook = 0
-    # black_find_rook = 0
+    white_find_rook = 0
+    black_find_rook = 0
+    rook_control = 0
     stock_fish = stockfish.Stockfish()
     contempt_value = 0
     contempt_factor = {
@@ -203,8 +218,13 @@ def view():
                 robot = 2
                 robot_time = time.time()
                 best_move, poslist = sfish.black_start_game()
+                if old_place[character.index(best_move[2:], 0)] == 1:
+                    # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                    print(best_move)
+                else:
+                    # print(best_move[:2] + best_move[2:] + "put")
+                    print(best_move)
 
-                print(best_move)
                 started = 1
             if robot == 2 and time.time() - robot_time > 10:
                 robot_time = time.time()
@@ -278,16 +298,18 @@ def view():
                         old_place[i] = place1[i]
 
                 if len(diff1) == 2:
-
                     robot = 3
                     robot_time = time.time()
                     sfish.position(character[diff1[0]] + character[diff1[1]])
                     best_move, poslist = sfish.black_start_game()
-                    if old_place[character.index(best_move[2:], 0)] == 1:
-                        print(best_move[:2] + "yedii" + best_move[2:])
-                    else:
-                        print(best_move[:2] + "yemedii" + best_move[2:])
+                    if white_find_rook == 0:
+                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        print(best_move[:2] + best_move[2:] + "put")
                     diff1.clear()
+                    rook_control = 0
                     # if character[diff1[0]] + character[diff1[1]] == 'a8c8':
                     #     "girdii"
 
@@ -303,8 +325,16 @@ def view():
                     best_move, poslist = sfish.black_start_game()
                     character[diff1[0]] = 'e8'
                     character[diff1[1]] = 'f8'
+                    if white_find_rook == 0:
+                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        print(best_move)
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        # print(best_move[:2] + best_move[2:] + "put")
+                        print(best_move)
                     diff1.clear()
-                    print(best_move)
+                    rook_control = 0
                     print("girdi")
                     rook = 1
 
@@ -320,8 +350,16 @@ def view():
                     best_move, poslist = sfish.black_start_game()
                     character[diff1[0]] = 'a8'
                     character[diff1[1]] = 'c8'
+                    if white_find_rook == 0:
+                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        print(best_move)
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        # print(best_move[:2] + best_move[2:] + "put")
+                        print(best_move)
                     diff1.clear()
-                    print(best_move)
+                    rook_control = 0
                     rook = 1
 
                 # elif len(diff1) == 1:
@@ -431,10 +469,16 @@ def view():
                     sfish.position(character[diff1[0]] + character[diff1[1]])
                     best_move, poslist = sfish.white_start_game()
 
-                    if old_place[character.index(best_move[2:], 0)] == 1:
-                        print(best_move[:2] + "yedii" + best_move[2:])
-                    else:
-                        print(best_move[:2] + "yemedii" + best_move[2:])
+                    if black_find_rook == 0:
+                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        print(best_move)
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        # print(best_move[:2] + best_move[2:] + "put")
+                        print(best_move)
+                    rook_control = 0
+
                     diff1.clear()
 
                 elif len(diff1) == 4 and character[diff1[0]] + character[diff1[1]] == 'e1f1' and rook == 0:
@@ -449,8 +493,16 @@ def view():
                     best_move, poslist = sfish.white_start_game()
                     character[diff1[0]] = 'e1'
                     character[diff1[1]] = 'f1'
+                    if black_find_rook == 0:
+                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        print(best_move)
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        # print(best_move[:2] + best_move[2:] + "put")
+                        print(best_move)
+                    rook_control = 0
                     diff1.clear()
-                    print(best_move)
                     print("girdi")
                     rook = 1
 
@@ -466,8 +518,17 @@ def view():
                     best_move, poslist = sfish.white_start_game()
                     character[diff1[0]] = 'a1'
                     character[diff1[1]] = 'c1'
+                    if black_find_rook == 0:
+                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                    if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        print(best_move)
+                    elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                        # print(best_move[:2] + best_move[2:] + "put")
+                        print(best_move)
+
+                    rook_control = 0
                     diff1.clear()
-                    print(best_move)
                     rook = 1
 
                 change = 0
