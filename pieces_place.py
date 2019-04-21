@@ -1,7 +1,7 @@
 import random
 import time
 
-# import arduino_python
+import arduino_python
 import chess3
 import sfish
 import stockfish
@@ -26,14 +26,14 @@ def white_rook_detect(location_list, white_find_rook):
     for i in range(0, len(location_list)):
         if str.find(location_list[i], 'e1') != -1:
             white_find_rook = white_find_rook + 1
-        if location_list[i] == 'e1f1' and white_find_rook == 1:
-            print('e1-' + '-f1_put-' + '-h1-' + '-e1_put-')
+        if location_list[i] == 'e1g1' and white_find_rook == 1:
+            arduino_python.push('-e1-' + '-fully-' + '-g1_down-' + '-empty-' + '-h1-' + '-fully-' + '-f1_down-' + '-empty-')
             # print(location_list[i])
             white_find_rook = 1
             rook_control = 1
             return white_find_rook, rook_control
         elif location_list[i] == 'e1c1' and white_find_rook == 1:
-            print('e1-' + '-c1_put-' + '-a1-' + '-d1_put')
+            arduino_python.push('-e1-' + '-fully-' + '-c1_down-' + '-empty-' + '-a1-' + '-fully-' + '-d1_down-' + '-empty-')
             # print('e1c1')
             white_find_rook = 1
             rook_control = 1
@@ -46,14 +46,14 @@ def black_rook_detect(location_list, black_find_rook):
     for i in range(0, len(location_list)):
         if str.find(location_list[i], 'e8') != -1:
             black_find_rook = black_find_rook + 1
-        if location_list[i] == 'e8f8' and black_find_rook == 1:
-            print('-e8-' + '-f8-' + '-put-' + '-h1-' + '-e1-' + '-put-')
+        if location_list[i] == 'e8g8' and black_find_rook == 1:
+            print('-e8-' + '-fully-' + '-g8_down-' + '-empty-' + '-h8-' + '-fully-' + '-f8_down-' + '-empty-')
             # print(location_list[i])
             black_find_rook = 1
             rook_control = 1
             return black_find_rook, rook_control
         elif location_list[i] == 'e8c8' and black_find_rook == 1:
-            print('-e1-' + '-c1-' + 'put' + '-a1-' + '-d1-' + '-put-')
+            print('-e8-' + '-fully-' + '-c8_down-' + '-empty-' + '-a8-' + '-fully-' + '-d8_down-' + '-empty-')
             # print('e8c8')
             black_find_rook = 1
             rook_control = 1
@@ -94,7 +94,7 @@ def control(listxy, place, pieces):
 
 
 def view():
-    # arduino_python.connection()
+    arduino_python.connection()
 
     coordinate, _ = chess3.points()
     _, listxy = chess3.points()
@@ -197,7 +197,7 @@ def view():
                 black_start = 1
                 white_start = 2
                 print("Siyahlarsiniz")
-
+            print(check)
         # Siyah Tas Islemleri
         if black_start == 1:
 
@@ -218,17 +218,18 @@ def view():
                 robot = 2
                 robot_time = time.time()
                 best_move, poslist = sfish.black_start_game()
+
                 if old_place[character.index(best_move[2:], 0)] == 1:
-                    # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                    print(best_move)
+                    arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[
+                                                                                                            2:] + '_down-' + 'empty-')
+                    robot_time = robot_time + 30
                 else:
-                    # print(best_move[:2] + best_move[2:] + "put")
-                    print(best_move)
+                    arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
 
                 started = 1
-            if robot == 2 and time.time() - robot_time > 10:
+            if robot == 2 and time.time() - robot_time > 30:
                 robot_time = time.time()
-                print("lutfen oynayin")
+                print("lutfen oynayin 1")
                 robot = 0
 
             if (change == 0) and white_check == 1 and robot == 0:
@@ -304,10 +305,12 @@ def view():
                     best_move, poslist = sfish.black_start_game()
                     if white_find_rook == 0:
                         white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        print(best_move[2:] + "-through-" + best_move[:2] + "put")
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-'+ best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        print(best_move[:2] + best_move[2:] + "put")
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
                     diff1.clear()
                     rook_control = 0
                     # if character[diff1[0]] + character[diff1[1]] == 'a8c8':
@@ -327,12 +330,14 @@ def view():
                     character[diff1[1]] = 'f8'
                     if white_find_rook == 0:
                         white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
+
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        # print(best_move[:2] + best_move[2:] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+
                     diff1.clear()
                     rook_control = 0
                     print("girdi")
@@ -352,12 +357,13 @@ def view():
                     character[diff1[1]] = 'c8'
                     if white_find_rook == 0:
                         white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
+
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        # print(best_move[:2] + best_move[2:] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
                     diff1.clear()
                     rook_control = 0
                     rook = 1
@@ -368,7 +374,8 @@ def view():
                 diff.clear()
                 diff1.clear()
 
-            if robot == 3 and time.time() - robot_time > 10:
+            if robot == 3 and time.time() - robot_time > 0:
+
                 robot_time = time.time()
                 for i in range(0, 64):
                     place1[i] = 0
@@ -376,7 +383,7 @@ def view():
 
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
-                print("lutfen oynayin")
+                print("lutfen oynayin 2")
                 robot = 0
         # Beyaz Tas islemleri
         elif white_start == 1:
@@ -471,12 +478,14 @@ def view():
 
                     if black_find_rook == 0:
                         black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
+
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        # print(best_move[:2] + best_move[2:] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+
                     rook_control = 0
 
                     diff1.clear()
@@ -495,12 +504,12 @@ def view():
                     character[diff1[1]] = 'f1'
                     if black_find_rook == 0:
                         black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        # print(best_move[:2] + best_move[2:] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
                     rook_control = 0
                     diff1.clear()
                     print("girdi")
@@ -519,13 +528,14 @@ def view():
                     character[diff1[0]] = 'a1'
                     character[diff1[1]] = 'c1'
                     if black_find_rook == 0:
-                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                        black_find_rook, rook_control = black_rook_detect(poslist, black_find_rook)
+                        robot_time = robot_time + 30
                     if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                        # print(best_move[2:] + "-through-" + best_move[:2] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                        robot_time = robot_time + 30
                     elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                        # print(best_move[:2] + best_move[2:] + "put")
-                        print(best_move)
+                        arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+
 
                     rook_control = 0
                     diff1.clear()
@@ -534,8 +544,8 @@ def view():
                 change = 0
                 diff.clear()
                 diff1.clear()
-
-            if robot == 3 and time.time() - robot_time > 10 and black_start == 1:
+            print(time.time() - robot_time)
+            if robot == 3 and time.time() - robot_time > 0 and black_start == 1:
                 robot_time = time.time()
                 for i in range(0, 64):
                     place1[i] = 0
@@ -543,9 +553,9 @@ def view():
 
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
-                print("lutfen oynayin")
+                print("lutfen oynayin 3")
                 robot = 0
-            elif robot == 3 and time.time() - robot_time > 10 and white_start == 1:
+            elif robot == 3 and time.time() - robot_time > 0 and white_start == 1:
                 robot_time = time.time()
                 for i in range(0, 64):
                     place1[i] = 0
@@ -553,7 +563,7 @@ def view():
 
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
-                print("lutfen oynayin")
+                print("lutfen oynayin 4")
                 robot = 0
 
         # print(blue_pieces)
@@ -573,20 +583,20 @@ def pieces_detect(img):
 
     # red_lower = np.array([0, 140, 140], np.uint8)  # golge degerler
     # red_upper = np.array([20, 255, 255], np.uint8)
-    red_lower = np.array([150, 80, 80], np.uint8)
-    red_upper = np.array([180, 200, 180], np.uint8)
+    # red_lower = np.array([150, 80, 80], np.uint8)
+    # red_upper = np.array([180, 200, 180], np.uint8)
     # #
-    # blue_lower = np.array([100, 90, 30],np.uint8)
-    # blue_upper = np.array([130, 200, 200], np.uint8)
+    blue_lower = np.array([100, 110, 110],np.uint8)
+    blue_upper = np.array([130, 225, 225], np.uint8)
     #
     # red_lower = np.array([0, 110, 110], np.uint8)
     # red_upper = np.array([20, 255, 255], np.uint8)
 
-    # red_lower = np.array([150, 110, 100], np.uint8)
-    # red_upper = np.array([180, 225, 225], np.uint8)
+    red_lower = np.array([150, 90, 90], np.uint8)
+    red_upper = np.array([180, 225, 225], np.uint8)
 
-    blue_lower = np.array([100, 130, 130], np.uint8)
-    blue_upper = np.array([130, 210, 210], np.uint8)
+    # blue_lower = np.array([100, 130, 130], np.uint8)
+    # blue_upper = np.array([130, 210, 210], np.uint8)
 
     green_lower = np.array([40, 50, 70], np.uint8)
     green_upper = np.array([80, 150, 150], np.uint8)
@@ -606,7 +616,7 @@ def pieces_detect(img):
     (contours, hierarchy) = cv2.findContours(red, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for pic, contour in enumerate(contours):
         area = cv2.contourArea(contour)
-        if area > 50:
+        if area > 30:
             x, y, w, h = cv2.boundingRect(contour)
             img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
             red_pieces.append(((2 * x + w) / 2, (2 * y + h) / 2))

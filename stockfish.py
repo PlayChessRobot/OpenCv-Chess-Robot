@@ -138,5 +138,5 @@ class Stockfish:
                 else:
                     return True
 
-    def __del__(self):
-        self.stockfish.kill()
+    # def __del__(self):
+    #     self.stockfish.kill()
