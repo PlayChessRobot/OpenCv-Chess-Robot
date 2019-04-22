@@ -28,3 +28,16 @@ def white_start_game():
     print(poslist)
     poslist.append(best_move)
     return best_move, poslist
+
+#
+# while True:
+#
+#
+#     best_move = stockfish.get_best_move()
+#     print(best_move)
+#     a = input("oyna")
+#
+#
+#     poslist.append(best_move)
+#     poslist.append(a)
+#     stockfish.set_position(poslist)

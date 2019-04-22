@@ -16,7 +16,7 @@ import os
 class Stockfish:
     """Integrates the Stockfish chess engine with Python."""
 
-    def __init__(self, path=None, depth=10, param=None):
+    def __init__(self, path=None, depth=20, param=None):
         if param is None:
             param = {}
         if path is None:
