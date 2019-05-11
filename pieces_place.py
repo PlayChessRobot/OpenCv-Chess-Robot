@@ -1,15 +1,15 @@
 import random
 import time
-
+import keyboard
 import arduino_python
 import chess3
 import sfish
 import stockfish
+from Chessnut import Game
 from face_classification.src.video_emotion_color_demo import *
 
 # capturing video through webcam
-# cap = cv2.VideoCapture("http://192.168.1.1:8080/video")
-
+cap = cv2.VideoCapture("http://192.168.1.1:8080/video")
 
 character = []
 for c in range(0, 8):
@@ -23,18 +23,28 @@ for c in range(0, 8):
     character.append(('h' + str(c + 1)))
 
 
+def key_press(key):
+    if key.name == 'a':
+        pos_list = sfish.ret_pos()
+        pos_list.pop()
+        pos_list.pop()
+        print(pos_list)
+
+
 def white_rook_detect(location_list, white_find_rook):
     for i in range(0, len(location_list)):
         if str.find(location_list[i], 'e1') != -1:
             white_find_rook = white_find_rook + 1
         if location_list[i] == 'e1g1' and white_find_rook == 1:
-            arduino_python.push('-redL-' + '-e1-' + '-fully-' + '-g1_down-' + '-empty-' + '-h1-' + '-fully-' + '-f1_down-' + '-empty-')
+            arduino_python.push(
+                '-redL-' + '-e1-' + '-fully-' + '-g1_down-' + '-empty-' + '-h1-' + '-fully-' + '-f1_down-' + '-empty-')
             # print(location_list[i])
             white_find_rook = 1
             rook_control = 1
             return white_find_rook, rook_control
         elif location_list[i] == 'e1c1' and white_find_rook == 1:
-            arduino_python.push('-redL-' + '-e1-' + '-fully-' + '-c1_down-' + '-empty-' + '-a1-' + '-fully-' + '-d1_down-' + '-empty-')
+            arduino_python.push(
+                '-redL-' + '-e1-' + '-fully-' + '-c1_down-' + '-empty-' + '-a1-' + '-fully-' + '-d1_down-' + '-empty-')
             # print('e1c1')
             white_find_rook = 1
             rook_control = 1
@@ -48,13 +58,15 @@ def black_rook_detect(location_list, black_find_rook):
         if str.find(location_list[i], 'e8') != -1:
             black_find_rook = black_find_rook + 1
         if location_list[i] == 'e8g8' and black_find_rook == 1:
-            arduino_python.push('-redL-' + '-e8-' + '-fully-' + '-g8_down-' + '-empty-' + '-h8-' + '-fully-' + '-f8_down-' + '-empty-')
+            arduino_python.push(
+                '-redL-' + '-e8-' + '-fully-' + '-g8_down-' + '-empty-' + '-h8-' + '-fully-' + '-f8_down-' + '-empty-')
             # print(location_list[i])
             black_find_rook = 1
             rook_control = 1
             return black_find_rook, rook_control
         elif location_list[i] == 'e8c8' and black_find_rook == 1:
-            arduino_python.push('-redL-' + '-e8-' + '-fully-' + '-c8_down-' + '-empty-' + '-a8-' + '-fully-' + '-d8_down-' + '-empty-')
+            arduino_python.push(
+                '-redL-' + '-e8-' + '-fully-' + '-c8_down-' + '-empty-' + '-a8-' + '-fully-' + '-d8_down-' + '-empty-')
             # print('e8c8')
             black_find_rook = 1
             rook_control = 1
@@ -95,18 +107,22 @@ def control(listxy, place, pieces):
 
 
 def view():
+    keyboard.on_press(key_press)
+
     arduino_python.connection()
+    chessgame = Game()
 
     coordinate, listxy = chess3.points()
+
     # _,  = chess3.poinxts()
-    cap = cv2.VideoCapture(2)
+    # cap = cv2.VideoCapture(2)
     diff = []
     diff1 = []
     old_place = np.zeros((64,), dtype=np.int)
     place = np.zeros((64,), dtype=np.int)
     place1 = np.zeros((64,), dtype=np.int)
     aligment = 0
-
+    legal_move = 0
     white_check = 0
     black_check = 0
     emotion_time = time.time()
@@ -219,10 +235,9 @@ def view():
                 robot = 2
                 robot_time = time.time()
                 best_move, poslist = sfish.black_start_game()
+                chessgame.apply_move(best_move)
 
                 if old_place[character.index(best_move[2:], 0)] == 1:
-                    # arduino_python.push('-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-' + best_move[
-                    #                                                                                         2:] + '_down-' + 'empty-')
                     arduino_python.push('-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
                     arduino_python.push('-redL-')
                     robot_time = robot_time + 30
@@ -235,7 +250,9 @@ def view():
             if robot == 2 and time.time() - robot_time > 0:
                 robot_time = time.time()
                 print("lutfen oynayin 1")
+
                 arduino_python.push('-greenL-')
+
                 robot = 0
 
             if (change == 0) and white_check == 1 and robot == 0:
@@ -309,36 +326,46 @@ def view():
                 if len(diff1) == 2:
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.black_start_game()
-                    if white_find_rook == 0:
-                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.black_start_game()
+                        chessgame.apply_move(best_move)
 
-                            arduino_python.push('-redL-' + '-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[:2] + '-fully-'+ best_move[2:] + '_down-' + 'empty-')
+                        if white_find_rook == 0:
+                            white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
 
-                            robot_time = robot_time + 60
+                                arduino_python.push(
+                                    '-redL-' + '-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
 
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-redL-' + '-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
-                            robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-redL-' + '-' + best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-redL-' + '-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                                robot_time = robot_time + 60
+
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-redL-' + '-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-redL-' + '-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-redL-' + '-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
+                    elif legal_move == 1:
+                        print("Yanlis Hamle Oynadiniz")
+                        arduino_python.push('-illegal_move-')
 
                     diff1.clear()
                     rook_control = 0
-
 
                 elif len(diff1) == 4 and character[diff1[0]] + character[diff1[1]] == 'e8f8' and rook == 0:
                     for i in range(0, 64):
@@ -348,35 +375,45 @@ def view():
                     character[diff1[1]] = 'g8'
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.black_start_game()
-                    character[diff1[0]] = 'e8'
-                    character[diff1[1]] = 'f8'
-                    if white_find_rook == 0:
-                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                            arduino_python.push('-' +'-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.black_start_game()
+                        chessgame.apply_move(best_move)
 
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                        character[diff1[0]] = 'e8'
+                        character[diff1[1]] = 'f8'
+                        if white_find_rook == 0:
+                            white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
+
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-' + '-redL-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
                             robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-'+ '-redL-' + best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
-                        robot_time = robot_time + 30
+                    elif legal_move == 1:
+                        arduino_python.push('-illegal_move-')
+                        print("Yanlis Hamle Oynadiniz")
+
                     diff1.clear()
                     rook_control = 0
                     rook = 1
@@ -389,35 +426,42 @@ def view():
                     character[diff1[1]] = 'c8'
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.black_start_game()
-                    character[diff1[0]] = 'a8'
-                    character[diff1[1]] = 'c8'
-                    if white_find_rook == 0:
-                        white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                            arduino_python.push('-'+ '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.black_start_game()
+                        chessgame.apply_move(best_move)
+                        character[diff1[0]] = 'a8'
+                        character[diff1[1]] = 'c8'
+                        if white_find_rook == 0:
+                            white_find_rook, rook_control = white_rook_detect(poslist, white_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
 
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-'+ '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
-                            robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-'+ '-redL-' + best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-'+ '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
-
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-' + '-redL-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
+                    elif legal_move == 1:
+                        arduino_python.push('-illegal_move-')
+                        print("Yanlis Hamle Oynadiniz")
                     diff1.clear()
                     rook_control = 0
                     rook = 1
@@ -438,7 +482,10 @@ def view():
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
                 print("lutfen oynayin 2")
-                arduino_python.push('-greenL-')
+                if legal_move == 0:
+                    arduino_python.push('-greenL-')
+                elif legal_move == 1:
+                    arduino_python.push('-illegal_move-')
                 robot = 0
         # Beyaz Tas islemleri
         elif white_start == 1:
@@ -529,36 +576,42 @@ def view():
                 if len(diff1) == 2:
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.white_start_game()
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.white_start_game()
+                        chessgame.apply_move(best_move)
+                        if black_find_rook == 0:
+                            black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                                print("geliyor")
+                                robot_time = robot_time + 60
 
-                    if black_find_rook == 0:
-                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                            arduino_python.push('-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                              2:] + '_down-' + 'empty-')
-                            print("geliyor")
-                            robot_time = robot_time + 60
-
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-'+ '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
-                            robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-' + '-redL-'+ best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-' + '-redL-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
+                    elif legal_move == 1:
+                        arduino_python.push('-illegal_move-')
+                        print("Yanlis Hamle Oynadiniz")
                     rook_control = 0
-
                     diff1.clear()
 
                 elif len(diff1) == 4 and character[diff1[0]] + character[diff1[1]] == 'e1f1' and rook == 0:
@@ -569,34 +622,42 @@ def view():
                     character[diff1[1]] = 'g1'
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.white_start_game()
-                    character[diff1[0]] = 'e1'
-                    character[diff1[1]] = 'f1'
-                    if black_find_rook == 0:
-                        black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                            arduino_python.push('-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.white_start_game()
+                        chessgame.apply_move(best_move)
+                        character[diff1[0]] = 'e1'
+                        character[diff1[1]] = 'f1'
+                        if black_find_rook == 0:
+                            black_find_rook, rook_control = black_rook_detect(poslist, white_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
 
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-'+ '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
-                            robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-' + '-redL-' + best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-' + '-redL-'+ best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-' + '-redL-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
+                    elif legal_move == 1:
+                        arduino_python.push('-illegal_move-')
+                        print("Yanlis Hamle Oynadiniz")
                     rook_control = 0
                     diff1.clear()
                     print("girdi")
@@ -610,35 +671,43 @@ def view():
                     character[diff1[1]] = 'c1'
                     robot = 3
                     robot_time = time.time()
-                    sfish.position(character[diff1[0]] + character[diff1[1]])
-                    best_move, poslist = sfish.white_start_game()
-                    character[diff1[0]] = 'a1'
-                    character[diff1[1]] = 'c1'
-                    if black_find_rook == 0:
-                        black_find_rook, rook_control = black_rook_detect(poslist, black_find_rook)
-                        if rook_control == 1:
-                            robot_time = robot_time + 60
-                    try:
-                        if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
-                            arduino_python.push('-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                    legal_move = chessgame.apply_move(character[diff1[0]] + character[diff1[1]])
+                    if legal_move == 0:
+                        sfish.position(character[diff1[0]] + character[diff1[1]])
+                        best_move, poslist = sfish.white_start_game()
+                        chessgame.apply_move(best_move)
+                        character[diff1[0]] = 'a1'
+                        character[diff1[1]] = 'c1'
+                        if black_find_rook == 0:
+                            black_find_rook, rook_control = black_rook_detect(poslist, black_find_rook)
+                            if rook_control == 1:
+                                robot_time = robot_time + 60
+                        try:
+                            if old_place[character.index(best_move[2:], 0)] == 1 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
 
-                        elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
-                            arduino_python.push('-'+ '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
-                            robot_time = robot_time + 30
-                    except ValueError:
-                        if len(best_move) == 3:
-                            arduino_python.push('-'+ '-redL-' + best_move[0:1] + str(int(best_move[1:2]) - 1) + '-fully-' + best_move[
-                                                                                                              0:2] + '_down-' + '-empty-')
-                            robot_time = robot_time + 30
-                        else:
-                            arduino_python.push('-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' + best_move[
-                                                                                                      :2] + '-fully-' + best_move[
-                                                                                                                        2:4] + '_down-' + 'empty-')
-                            robot_time = robot_time + 60
+                            elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[:2] + '-fully-' + best_move[2:] + '_down-' + "empty-")
+                                robot_time = robot_time + 30
+                        except ValueError:
+                            if len(best_move) == 3:
+                                arduino_python.push('-' + '-redL-' + best_move[0:1] + str(
+                                    int(best_move[1:2]) - 1) + '-fully-' + best_move[
+                                                                           0:2] + '_down-' + '-empty-')
+                                robot_time = robot_time + 30
+                            else:
+                                arduino_python.push(
+                                    '-' + '-redL-' + best_move[2:4] + '-fully-' + 'out-' + 'empty-' +
+                                    best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
+                                robot_time = robot_time + 60
 
+                    elif legal_move == 1:
+                        arduino_python.push('-illegal_move-')
+                        print("Yanlis Hamle Oynadiniz.")
 
                     rook_control = 0
                     diff1.clear()
@@ -656,7 +725,10 @@ def view():
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
                 print("lutfen oynayin 3")
-                arduino_python.push('-greenL-')
+                if legal_move == 0:
+                    arduino_python.push('-greenL-')
+                elif legal_move == 1:
+                    arduino_python.push('-illegal_move-')
                 robot = 0
             elif robot == 3 and time.time() - robot_time > 0 and white_start == 1:
                 robot_time = time.time()
@@ -667,7 +739,10 @@ def view():
                 for i in range(0, len(place1)):
                     old_place[i] = place1[i]
                 print("lutfen oynayin 4")
-                arduino_python.push('-greenL-')
+                if legal_move == 0:
+                    arduino_python.push('-greenL-')
+                elif legal_move == 1:
+                    arduino_python.push('-illegal_move-')
                 robot = 0
 
         # print(blue_pieces)
@@ -693,7 +768,7 @@ def pieces_detect(img):
     # blue_lower = np.array([100, 115, 115],  np.uint8) # Telefon Goruntusu
     # blue_upper = np.array([130, 230, 225], np.uint8)
     #
-    blue_lower = np.array([100, 158, 150],  np.uint8) # Telefon Goruntusu
+    blue_lower = np.array([100, 150, 150], np.uint8)  # Telefon Goruntusu
     blue_upper = np.array([130, 255, 255], np.uint8)
 
     # red_lower = np.array([160, 90, 90], np.uint8)
