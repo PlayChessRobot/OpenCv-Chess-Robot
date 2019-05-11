@@ -21,26 +21,26 @@ Servo gripper;
 void h8() {
 
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           69,  90, 90, 133, 90,  54);
+  Braccio.ServoMovement(30,           68,  90, 90, 133, 90,  51);
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 130, 133, 90,  54);
+  Braccio.ServoMovement(30,           68,  121, 130, 133, 90,  51);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 130, 133, 90,  73);
+  Braccio.ServoMovement(30,           68,  121, 130, 133, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 90, 133, 90,  73);
+  Braccio.ServoMovement(30,           68,  121, 90, 133, 90,  73);
   delay(1000);
 
 }
 
 void h8_down() {
-  Braccio.ServoMovement(30,           69,  90, 90, 133, 90,  73);
+  Braccio.ServoMovement(30,           68,  90, 90, 133, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 130, 133, 90,  73);
+  Braccio.ServoMovement(30,           68,  121, 130, 133, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 130, 133, 90,  54);
+  Braccio.ServoMovement(30,           68,  121, 130, 133, 90,  51);
   delay(1000);
-  Braccio.ServoMovement(30,           69,  121, 90, 133, 90,  54);
+  Braccio.ServoMovement(30,           69,  121, 90, 133, 90,  51);
   delay(1000);
 
 
@@ -48,26 +48,25 @@ void h8_down() {
 
 void h7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,              74,  90, 90, 135, 90,  54);
+  Braccio.ServoMovement(30,              74,  90, 90, 133, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,               74,  118, 131, 135, 90,  54);
+  Braccio.ServoMovement(30,               74,  117, 131, 133, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,              74,  118, 131, 135, 90,  70);
+  Braccio.ServoMovement(30,              74,  117, 131, 133, 90,  70);
   delay(1000);
-  Braccio.ServoMovement(30,              74,  118, 90, 135, 90,  70);
+  Braccio.ServoMovement(30,              74,  117, 90, 133, 90,  70);
   delay(1000);
 
 }
 
 void h7_down() {
-  Braccio.ServoMovement(30,                74,  90, 90, 135, 90,  70);
+  Braccio.ServoMovement(30,                74,  90, 90, 133, 90,  70);
   delay(1000);
-  Braccio.ServoMovement(30,               74,  118, 131, 135, 90,  70);
+  Braccio.ServoMovement(30,               74,  117, 131, 133, 90,  70);
   delay(1000);
-  Braccio.ServoMovement(30,              74,  118, 131, 135, 90,  54);
-
+  Braccio.ServoMovement(30,              74,  117, 131, 133, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,              74,  118, 90, 135, 90,  54);
+  Braccio.ServoMovement(30,              74,  117, 90, 133, 90,  54);
   delay(1000);
 
 
@@ -75,14 +74,14 @@ void h7_down() {
 
 void h6() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,              80,  90, 90, 140, 90,  54);
+  Braccio.ServoMovement(30,              79,  90, 90, 139, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 127, 140, 90,  54);
+  Braccio.ServoMovement(30,              79,  119, 127, 139, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 127, 140, 90,  73);
+  Braccio.ServoMovement(30,              79,  119, 127, 139, 90,  73);
 
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 90, 140, 90,  73);
+  Braccio.ServoMovement(30,              79,  119, 90, 139, 90,  73);
   delay(1000);
 
 }
@@ -90,14 +89,14 @@ void h6() {
 void h6_down() {
 
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,              80,  90, 90, 140, 90,  73);
+  Braccio.ServoMovement(30,              79,  90, 90, 139, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 127, 140, 90,  73);
+  Braccio.ServoMovement(30,              79,  119, 127, 139, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 127, 140, 90,  54);
+  Braccio.ServoMovement(30,              79,  119, 127, 139, 90,  54);
 
   delay(1000);
-  Braccio.ServoMovement(30,              80,  118, 90, 140, 90,  54);
+  Braccio.ServoMovement(30,              79,  119, 90, 139, 90,  54);
   delay(1000);
 
 
@@ -248,54 +247,54 @@ void h1_down() {
 
 void g8() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           67,  90, 90, 137, 90,  54);
+  Braccio.ServoMovement(30,           66,  90, 90, 137, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           67,  110, 140, 137, 90,  54);
+  Braccio.ServoMovement(30,           66,  110, 140, 137, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           67,  110, 140, 137, 90,  73);
+  Braccio.ServoMovement(30,           66,  110, 140, 137, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           67,  110, 90, 137, 90,  73);
+  Braccio.ServoMovement(30,           66,  110, 90, 137, 90,  73);
   delay(1000);
 
 }
 
 void g8_down() {
-  Braccio.ServoMovement(30,           67,  90, 90, 137, 90,  73);
+  Braccio.ServoMovement(30,           66,  90, 90, 137, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,          67,  110, 140, 137, 90,  73);
+  Braccio.ServoMovement(30,          66,  110, 140, 137, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           67,  110, 140, 137, 90,  73);
+  Braccio.ServoMovement(30,           66,  110, 140, 137, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,          67,  110, 140, 137, 90,  54);
+  Braccio.ServoMovement(30,          66,  110, 140, 137, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           67,  110, 90, 137, 90,  54);
+  Braccio.ServoMovement(30,           66,  110, 90, 137, 90,  54);
   delay(1000);
 
 }
 void g7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           73,  90, 90, 136, 90,  54);
+  Braccio.ServoMovement(30,           72,  90, 90, 135, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 145, 136, 90,  54);
+  Braccio.ServoMovement(30,           72,  105, 145, 135, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 145, 136, 90,  73);
+  Braccio.ServoMovement(30,           72,  105, 145, 135, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 90, 136, 90,  73);
+  Braccio.ServoMovement(30,           72,  105, 90, 135, 90,  73);
   delay(1000);
 
 }
 void g7_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           73,  90, 90, 136, 90,  73);
+  Braccio.ServoMovement(30,           72,  90, 90, 135, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 145, 136, 90,  73);
+  Braccio.ServoMovement(30,           72,  105, 145, 135, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 145, 136, 90,  54);
+  Braccio.ServoMovement(30,           72,  105, 145, 135, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           73,  105, 90, 136, 90,  54);
+  Braccio.ServoMovement(30,           72,  105, 90, 135, 90,  54);
   delay(1000);
 
 }
@@ -504,28 +503,28 @@ void f8_down() {
 
 void f7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           72,  90, 90, 112, 90,  54);
+  Braccio.ServoMovement(30,           71,  90, 90, 112, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 180, 112, 90,  54);
+  Braccio.ServoMovement(30,           71,  81, 180, 112, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 180, 112, 90,  73);
+  Braccio.ServoMovement(30,           71,  81, 180, 112, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 90, 112, 90,  73);
+  Braccio.ServoMovement(30,           71,  81, 90, 112, 90,  73);
   delay(1000);
 
 }
 
 void f7_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           72,  90, 90, 114, 90,  73);
+  Braccio.ServoMovement(30,           71,  90, 90, 114, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 180, 114, 90,  73);
+  Braccio.ServoMovement(30,           71,  81, 180, 114, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 180, 114, 90,  54);
+  Braccio.ServoMovement(30,           71,  81, 180, 114, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           72,  81, 90, 114, 90,  54);
+  Braccio.ServoMovement(30,           71,  81, 90, 114, 90,  54);
   delay(1000);
 
 }
@@ -697,9 +696,9 @@ void f1_down() {
 
 void e8() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           63,  90, 90, 122, 90,  54);
+  Braccio.ServoMovement(30,           63,  90, 90, 122, 90,  53);
   delay(1000);
-  Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  54);
+  Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  53);
   //Wait 1 second
   delay(1000);
   Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  73);
@@ -717,36 +716,36 @@ void e8_down() {
   Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  54);
+  Braccio.ServoMovement(30,           63,  75, 180, 122, 90,  53);
   delay(1000);
-  Braccio.ServoMovement(30,           63,  75, 90, 122, 90,  54);
+  Braccio.ServoMovement(30,           63,  75, 90, 122, 90,  53);
   delay(1000);
 
 }
 void e7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           70,  90, 90, 128, 90,  54);
+  Braccio.ServoMovement(30,           69,  90, 90, 128, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 179, 128, 90,  54);
+  Braccio.ServoMovement(30,           69,  72, 179, 128, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 179, 128, 90,  73);
+  Braccio.ServoMovement(30,           69,  72, 179, 128, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 90, 128, 90,  73);
+  Braccio.ServoMovement(30,           69,  72, 90, 128, 90,  73);
   delay(1000);
 
 }
 
 void e7_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           70,  90, 90, 128, 90,  73);
+  Braccio.ServoMovement(30,           69,  90, 90, 128, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 179, 128, 90,  73);
+  Braccio.ServoMovement(30,           69,  72, 179, 128, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 179, 128, 90,  54);
+  Braccio.ServoMovement(30,           69,  72, 179, 128, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           70,  72, 90, 128, 90,  54);
+  Braccio.ServoMovement(30,           69,  72, 90, 128, 90,  54);
   delay(1000);
 }
 
@@ -777,28 +776,28 @@ void e6_down() {
 }
 void e5() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           84,  90, 90, 133, 90,  54);
+  Braccio.ServoMovement(30,           83,  90, 90, 133, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 179, 133, 90,  54);
+  Braccio.ServoMovement(30,           83,  70, 179, 133, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 179, 133, 90,  73);
+  Braccio.ServoMovement(30,           83,  70, 179, 133, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 90, 133, 90,  73);
+  Braccio.ServoMovement(30,           83,  70, 90, 133, 90,  73);
   delay(1000);
 
 }
 
 void e5_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           84,  90, 90, 133, 90,  73);
+  Braccio.ServoMovement(30,           83,  90, 90, 133, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 179, 133, 90,  73);
+  Braccio.ServoMovement(30,           83,  70, 179, 133, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 179, 133, 90,  54);
+  Braccio.ServoMovement(30,           83,  70, 179, 133, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           84,  70, 90, 133, 90,  54);
+  Braccio.ServoMovement(30,           83,  70, 90, 133, 90,  54);
   delay(1000);
 }
 
@@ -939,27 +938,27 @@ void d8_down() {
 
 void d7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           68,  90, 90, 140, 90,  54);
+  Braccio.ServoMovement(30,           66,  90, 90, 140, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 178, 140, 90,  54);
+  Braccio.ServoMovement(30,           66,  65, 178, 140, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 178, 140, 90,  73);
+  Braccio.ServoMovement(30,           66,  65, 178, 140, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 90, 140, 90,  73);
+  Braccio.ServoMovement(30,           66,  65, 90, 140, 90,  73);
   delay(1000);
 
 }
 void d7_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           68,  90, 90, 140, 90,  73);
+  Braccio.ServoMovement(30,           66,  90, 90, 140, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 178, 140, 90,  73);
+  Braccio.ServoMovement(30,           66,  65, 178, 140, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 178, 140, 90,  54);
+  Braccio.ServoMovement(30,           66,  65, 178, 140, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           68,  65, 90, 140, 90,  54);
+  Braccio.ServoMovement(30,           66,  65, 90, 140, 90,  54);
   delay(1000);
 }
 
@@ -1126,54 +1125,54 @@ void d1_down() {
 
 void c8() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           57,  90, 90, 143, 90,  54);
+  Braccio.ServoMovement(30,           56,  90, 90, 145, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 180, 143, 90,  54);
+  Braccio.ServoMovement(30,           56,  60, 178, 145, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 180, 143, 90,  73);
+  Braccio.ServoMovement(30,           56,  60, 178, 145, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 90, 143, 90,  73);
+  Braccio.ServoMovement(30,           56,  60, 90, 145, 90,  73);
   delay(1000);
 
 }
 void c8_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           57,  90, 90, 143, 90,  73);
+  Braccio.ServoMovement(30,           56,  90, 90, 145, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 180, 143, 90,  73);
+  Braccio.ServoMovement(30,           56,  60, 178, 145, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 180, 143, 90,  54);
+  Braccio.ServoMovement(30,           56,  60, 178, 145, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           57,  60, 90, 143, 90,  54);
+  Braccio.ServoMovement(30,           56,  60, 90, 145, 90,  54);
   delay(1000);
 }
 
 
 void c7() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           65,  90, 90, 149, 90,  54);
+  Braccio.ServoMovement(30,           64,  90, 90, 149, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 180, 149, 90,  54);
+  Braccio.ServoMovement(30,           64,  56, 180, 149, 90,  54);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 180, 149, 90,  73);
+  Braccio.ServoMovement(30,           64,  56, 180, 149, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 90, 149, 90,  73);
+  Braccio.ServoMovement(30,           64,  56, 90, 149, 90,  73);
   delay(1000);
 
 }
 void c7_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           65,  90, 90, 149, 90,  73);
+  Braccio.ServoMovement(30,           64,  90, 90, 149, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 180, 149, 90,  73);
+  Braccio.ServoMovement(30,           64,  56, 180, 149, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 180, 149, 90,  54);
+  Braccio.ServoMovement(30,           64,  56, 180, 149, 90,  54);
   delay(1000);
-  Braccio.ServoMovement(30,           65,  56, 90, 149, 90,  54);
+  Braccio.ServoMovement(30,           64,  56, 90, 149, 90,  54);
   delay(1000);
 }
 
@@ -1553,28 +1552,28 @@ void b1_down() {
 
 void a8() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           48,  90, 90, 161, 90,  54);
+  Braccio.ServoMovement(30,           47,  90, 90, 161, 90,  53);
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 180, 161, 90,  54);
+  Braccio.ServoMovement(30,           47,  45, 180, 161, 90,  53);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 180, 161, 90,  73);
+  Braccio.ServoMovement(30,           47,  45, 180, 161, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 90, 161, 90,  73);
+  Braccio.ServoMovement(30,           47,  45, 90, 161, 90,  73);
   delay(1000);
 
 
 }
 void a8_down() {
   //(step delay, M1, M2, M3, M4, M5, M6);
-  Braccio.ServoMovement(30,           48,  90, 90, 161, 90,  73);
+  Braccio.ServoMovement(30,           47,  90, 90, 161, 90,  73);
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 180, 161, 90,  73);
+  Braccio.ServoMovement(30,           47,  45, 180, 161, 90,  73);
   //Wait 1 second
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 180, 161, 90,  54);
+  Braccio.ServoMovement(30,           47,  45, 180, 161, 90,  53);
   delay(1000);
-  Braccio.ServoMovement(30,           48,  45, 90, 161, 90,  54);
+  Braccio.ServoMovement(30,           47,  45, 90, 161, 90,  53);
   delay(1000);
 
 }
@@ -1818,6 +1817,16 @@ void greenL() {
   lcd.print("Sira sizde");
 
 }
+void illegal_move(){
+  lcd.clear();
+  digitalWrite(red, LOW);
+  digitalWrite(green, HIGH);
+  lcd.setCursor(2, 0);
+  lcd.print("Yanlis Hamle");
+  lcd.setCursor(3, 1);
+  lcd.print("Oynadiniz!");
+  
+  }
 
 
 
@@ -1840,7 +1849,7 @@ Caller FuncCall[] = {
   &f1_down, &f2_down, &f3_down, &f4_down, &f5_down, &f6_down, &f7_down, &f8_down,
   &g1_down, &g2_down, &g3_down, &g4_down, &g5_down, &g6_down, &g7_down, &g8_down,
   &h1_down, &h2_down, &h3_down, &h4_down, &h5_down, &h6_down, &h7_down, &h8_down,
-  &out, &fully, &empty, &tenSec, &redL, &greenL
+  &out, &fully, &empty, &tenSec, &redL, &greenL, &illegal_move
 };
 
 
@@ -1861,7 +1870,7 @@ const char* func_list[] = {
   "f1_down", "f2_down", "f3_down", "f4_down", "f5_down", "f6_down", "f7_down", "f8_down",
   "g1_down", "g2_down", "g3_down", "g4_down", "g5_down", "g6_down", "g7_down", "g8_down",
   "h1_down", "h2_down", "h3_down", "h4_down", "h5_down", "h6_down", "h7_down", "h8_down",
-  "out", "fully", "empty",  "tenSec", "redL", "greenL"
+  "out", "fully", "empty",  "tenSec", "redL", "greenL", "illegal_move"
 };
 char *p;
 
@@ -1902,7 +1911,7 @@ void loop() {
     char* token = strtok(str_array, "-");
     while (token != NULL)
     {
-      for (int i = 0; i < 134; i++)
+      for (int i = 0; i < 135; i++)
       {
 
         if (strcmp(token, func_list[i]) == 0) {
@@ -1918,13 +1927,9 @@ void loop() {
     }
   }
 
-
-  //tenSec();
-
-
-//  b2();
+//  h5();
 //  fully();
-//  b2_down();
+//  h5_down();
 //  empty();
-  
+
 }
