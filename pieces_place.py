@@ -9,7 +9,7 @@ from Chessnut import Game
 from face_classification.src.video_emotion_color_demo import *
 
 # capturing video through webcam
-cap = cv2.VideoCapture("http://192.168.1.1:8080/video")
+# cap = cv2.VideoCapture("http://192.168.1.1:8080/video")
 
 character = []
 for c in range(0, 8):
@@ -115,7 +115,7 @@ def view():
     coordinate, listxy = chess3.points()
 
     # _,  = chess3.poinxts()
-    # cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(2)
     diff = []
     diff1 = []
     old_place = np.zeros((64,), dtype=np.int)
