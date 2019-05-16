@@ -117,7 +117,8 @@ def masked(image, x1, y1, x2, y2):
 
 
 def points():
-    cap = cv2.VideoCapture('http://192.168.1.1:8080/video')
+    # cap = cv2.VideoCapture('http://192.168.1.1:8080/video')
+    cap = cv2.VideoCapture(2)
     detectboard = 0
     listp = []
     listx = []

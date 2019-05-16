@@ -16,7 +16,7 @@ import os
 class Stockfish:
     """Integrates the Stockfish chess engine with Python."""
 
-    def __init__(self, path=None, depth=20, param=None):
+    def __init__(self, path=None, depth=15, param=None):
         if param is None:
             param = {}
         if path is None:
@@ -47,7 +47,7 @@ class Stockfish:
 
         default_param.update(param)
         self.param = default_param
-        # print(default_param)
+        print("Saldiri Degeri " + str(default_param["Contempt"]))
         for name, value in list(default_param.items()):
             self.__set_option(name, value)
 
