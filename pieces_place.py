@@ -140,6 +140,8 @@ def view():
     rook_control = 0
     stock_fish = stockfish.Stockfish()
     contempt_value = 0
+    check2 = 0
+    check1 = 0
     contempt_factor = {
         'Contempt': contempt_value
     }
@@ -189,32 +191,42 @@ def view():
             check = 0
             for i in range(0, len(place)):
                 if place[i] == 1:
+
                     check = check + 1
                     old_place[i] = place[i]
                     place[i] = 0
+            if check1 != check:
+                print("Beyaz Tas Sayisi : " + str(check))
+                check1 = check
+
 
             if check == 16:
                 black_start = 2
                 white_start = 1
                 print("Beyazlarsiniz")
-            print(check)
+
         # Siyah tas sayaci
         if black_start == 0:
             control(listxy, place, red_pieces)
-
             check = 0
 
             for i in range(0, len(place)):
                 if place[i] == 1:
+
+
                     check = check + 1
                     old_place[i] = place[i]
                     place[i] = 0
+            if check2 != check:
+                print("Siyah Tas Sayisi : " + str(check))
+                check2 = check
+
             # print(check)
             if check == 16:
                 black_start = 1
                 white_start = 2
                 print("Siyahlarsiniz")
-            print(check)
+
         # Siyah Tas Islemleri
         if black_start == 1:
 
@@ -361,7 +373,7 @@ def view():
                                     best_move[:2] + '-fully-' + best_move[2:4] + '_down-' + 'empty-')
                                 robot_time = robot_time + 60
                     elif legal_move == 1:
-                        print("Yanlis Hamle Oynadiniz")
+                        print("Yanlis Hamle Oynadiniz" + character[diff1[0]] + character[diff1[1]])
                         arduino_python.push('-illegal_move-')
 
                     diff1.clear()
@@ -412,7 +424,7 @@ def view():
                             robot_time = robot_time + 30
                     elif legal_move == 1:
                         arduino_python.push('-illegal_move-')
-                        print("Yanlis Hamle Oynadiniz")
+                        print("Yanlis Hamle Oynadiniz " + character[diff1[0]] + character[diff1[1]])
 
                     diff1.clear()
                     rook_control = 0
@@ -461,7 +473,7 @@ def view():
                                 robot_time = robot_time + 60
                     elif legal_move == 1:
                         arduino_python.push('-illegal_move-')
-                        print("Yanlis Hamle Oynadiniz")
+                        print("Yanlis Hamle Oynadiniz " + character[diff1[0]] + character[diff1[1]])
                     diff1.clear()
                     rook_control = 0
                     rook = 1
@@ -473,7 +485,7 @@ def view():
                 diff1.clear()
 
             if robot == 3 and time.time() - robot_time > 0:
-                print(time.time() - robot_time)
+
                 robot_time = time.time()
                 for i in range(0, 64):
                     place1[i] = 0
@@ -590,7 +602,7 @@ def view():
                                 arduino_python.push(
                                     '-' + '-redL-' + best_move[2:] + '-fully-' + 'out-' + 'empty-' +
                                     best_move[:2] + '-fully-' + best_move[2:] + '_down-' + 'empty-')
-                                print("geliyor")
+
                                 robot_time = robot_time + 60
 
                             elif old_place[character.index(best_move[2:], 0)] == 0 and rook_control == 0:
@@ -610,7 +622,7 @@ def view():
                                 robot_time = robot_time + 60
                     elif legal_move == 1:
                         arduino_python.push('-illegal_move-')
-                        print("Yanlis Hamle Oynadiniz")
+                        print("Yanlis Hamle Oynadiniz " + character[diff1[0]] + character[diff1[1]])
                     rook_control = 0
                     diff1.clear()
 
@@ -657,10 +669,10 @@ def view():
                                 robot_time = robot_time + 60
                     elif legal_move == 1:
                         arduino_python.push('-illegal_move-')
-                        print("Yanlis Hamle Oynadiniz")
+                        print("Yanlis Hamle Oynadiniz " + character[diff1[0]] + character[diff1[1]])
                     rook_control = 0
                     diff1.clear()
-                    print("girdi")
+
                     rook = 1
 
                 elif len(diff1) == 4 and character[diff1[0]] + character[diff1[1]] == 'a1c1' and rook == 0:
@@ -707,7 +719,7 @@ def view():
 
                     elif legal_move == 1:
                         arduino_python.push('-illegal_move-')
-                        print("Yanlis Hamle Oynadiniz.")
+                        print("Yanlis Hamle Oynadiniz "+ character[diff1[0]] + character[diff1[1]])
 
                     rook_control = 0
                     diff1.clear()
@@ -768,7 +780,7 @@ def pieces_detect(img):
     # blue_lower = np.array([100, 115, 115],  np.uint8) # Telefon Goruntusu
     # blue_upper = np.array([130, 230, 225], np.uint8)
     #
-    blue_lower = np.array([100, 150, 150], np.uint8)  # Telefon Goruntusu
+    blue_lower = np.array([100, 165, 165], np.uint8)  # Telefon Goruntusu
     blue_upper = np.array([130, 255, 255], np.uint8)
 
     # red_lower = np.array([160, 90, 90], np.uint8)
